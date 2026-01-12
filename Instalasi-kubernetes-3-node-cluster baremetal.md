@@ -125,11 +125,11 @@ k3d cluster create my-cluster \
     --port "30000-30005:30000-30005@server:0" \
     --timeout 120s
 ```
-    > [!NOTE]  Penjelasan Parameter (Kenapa settingannya begini?):
-    > - ```--agents 2```: Menyiapkan 2 node worker tambahan (Total 3 node dalam cluster).
-    > - ```--port "8080:80..."```: Mengakses web server cluster (port 80) lewat port 8080 di browser laptop kita.
-    > - ```--port "30000-30005..."```: Hanya membuka 6 port eksternal. Jangan membuka range 30000-32767 secara penuh karena akan membuat ribuan proses proxy yang memakan habis RAM/CPU server fisik.
-    > - ```--timeout 120s```: Memberi waktu napas lebih panjang saat inisialisasi agar tidak error di hardware terbatas.
+> [!NOTE]  Penjelasan Parameter (Kenapa settingannya begini?):
+> - ```--agents 2```: Menyiapkan 2 node worker tambahan (Total 3 node dalam cluster).
+> - ```--port "8080:80..."```: Mengakses web server cluster (port 80) lewat port 8080 di browser laptop kita.
+> - ```--port "30000-30005..."```: Hanya membuka 6 port eksternal. Jangan membuka range 30000-32767 secara penuh karena akan membuat ribuan proses proxy yang memakan habis RAM/CPU server fisik.
+> - ```--timeout 120s```: Memberi waktu napas lebih panjang saat inisialisasi agar tidak error di hardware terbatas.
 
 ## ✅ Langkah 4: Validasi (Cek Apakah Cluster Hidup)
 
