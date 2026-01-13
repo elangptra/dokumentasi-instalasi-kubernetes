@@ -31,28 +31,28 @@ Pilih panduan di bawah ini sesuai dengan OS yang terinstall di server Anda.
 ### A. Untuk Pengguna Debian 13 (Trixie)
 Debian Trixie adalah versi *testing/next-stable*. Karena sangat baru, repository Docker resmi mungkin belum menyediakan folder khusus untuknya. Kita perlu trik khusus.
 
-3.  **Siapkan Keyring Keamanan:**
+1.  **Siapkan Keyring Keamanan:**
     ```bash
-    sudo apt-get update 
-    sudo apt-get install -y ca-certificates curl gnupg iptables
+    sudo apt-get update
+    sudo apt-get install -y ca-certificates curl gnupg
     sudo install -m 0755 -d /etc/apt/keyrings
-    curl -fsSL [https://download.docker.com/linux/debian/gpg](https://download.docker.com/linux/debian/gpg) | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+    curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
     sudo chmod a+r /etc/apt/keyrings/docker.gpg
     ```
     > [!WARNING] JIKA MUNCUL ERROR syntax error near unexpected token 
     > - berarti anda kemungkinan menggunakan CLI Linux
     > - ubah curl -fsSL menjadi seperti ini  curl -fsSL "https://download.docker.com/linux/debian/gpg" | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 
-4.  **Tambahkan Repository (Compatibility Mode):**
+2.  **Tambahkan Repository (Compatibility Mode):**
     Kita menggunakan repo `bookworm` (Debian 12) jika repo `trixie` belum tersedia, agar instalasi stabil.
     ```bash
     echo \
-      "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] [https://download.docker.com/linux/debian](https://download.docker.com/linux/debian) \
-      bookworm stable" | \
+      "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \
+      trixie stable" | \
       sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
     ```
 
-5.  **Update Paket:**
+3.  **Update Paket:**
     ```bash
     sudo apt-get update
     ```
@@ -94,16 +94,22 @@ Docker berfungsi sebagai fondasi, sedangkan K3d adalah alat untuk membuat "node 
     ```bash
     sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
     ```
+     ```bash
+    sudo usermod -aG docker $USER
+    ```
+    ```bash
+    newgrp docker
+    ```
 
 2.  **Install K3d (Cluster Manager):**
     ```bash
-    curl -s [https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh](https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh) | bash
+    curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
     ```
+   
 
 3.  **Install Kubectl (Remote Control Kubernetes):**
     ```bash
-    curl -LO "[https://dl.k8s.io/release/$(curl](https://dl.k8s.io/release/$(curl) -L -s [https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl](https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl)"
-    sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+    sudo apt-get install kubectl 
     ```
 
 ---
