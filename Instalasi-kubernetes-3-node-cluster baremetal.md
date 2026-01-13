@@ -31,12 +31,7 @@ Pilih panduan di bawah ini sesuai dengan OS yang terinstall di server Anda.
 ### A. Untuk Pengguna Debian 13 (Trixie)
 Debian Trixie adalah versi *testing/next-stable*. Karena sangat baru, repository Docker resmi mungkin belum menyediakan folder khusus untuknya. Kita perlu trik khusus.
 
-1.  **Hapus paket lama yang berpotensi konflik:**
-    ```bash
-    sudo apt-get remove docker.io docker-doc docker-compose podman-docker containerd runc
-    ```
-
-2.  **Siapkan Keyring Keamanan:**
+3.  **Siapkan Keyring Keamanan:**
     ```bash
     sudo apt-get update 
     sudo apt-get install -y ca-certificates curl gnupg iptables
@@ -44,8 +39,11 @@ Debian Trixie adalah versi *testing/next-stable*. Karena sangat baru, repository
     curl -fsSL [https://download.docker.com/linux/debian/gpg](https://download.docker.com/linux/debian/gpg) | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
     sudo chmod a+r /etc/apt/keyrings/docker.gpg
     ```
+    > [!WARNING] JIKA MUNCUL ERROR syntax error near unexpected token 
+    > berarti anda kemungkinan menggunakan CLI Linux
+    > ubah curl -fsSL menjadi seperti ini  curl -fsSL "https://download.docker.com/linux/debian/gpg" | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 
-3.  **Tambahkan Repository (Compatibility Mode):**
+4.  **Tambahkan Repository (Compatibility Mode):**
     Kita menggunakan repo `bookworm` (Debian 12) jika repo `trixie` belum tersedia, agar instalasi stabil.
     ```bash
     echo \
@@ -54,7 +52,7 @@ Debian Trixie adalah versi *testing/next-stable*. Karena sangat baru, repository
       sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
     ```
 
-4.  **Update Paket:**
+5.  **Update Paket:**
     ```bash
     sudo apt-get update
     ```
