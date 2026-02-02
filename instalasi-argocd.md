@@ -1,0 +1,724 @@
+# 🚀 Cara Instalasi ArgoCD di Kubernetes
+
+### Panduan Lengkap instalasi ArgoCD untuk auto deployment di kubernetes!
+
+---
+
+## 🎯 Apa yang Akan Anda Dapatkan?
+
+Setelah mengikuti panduan ini:
+
+✅ ArgoCD terinstall di cluster Kubernetes Anda  
+✅ Dashboard ArgoCD yang bisa diakses  
+✅ Aplikasi Anda otomatis update kalau ada perubahan di Git  
+✅ Tidak perlu `kubectl apply` manual lagi!  
+
+**Ini yang disebut GitOps** - Git jadi "sumber kebenaran" untuk semua yang ada di cluster.
+
+---
+
+## ⏱️ Berapa Lama Prosesnya?
+
+- **Waktu:** 20-30 menit
+- **Yang Dibutuhkan:** 
+  - Cluster Kubernetes yang sudah jalan
+  - Akses kubectl ke cluster
+  - Repository Git (Gitlab) yang berisi file YAML Kubernetes
+
+---
+
+## 📋 Langkah-Langkah Instalasi
+
+### LANGKAH 1: Masuk ke Server Master
+
+**Seperti biasa, kita mulai dengan login ke server master.**
+
+1. Buka **Terminal**
+2. Login SSH ke server master:
+
+```bash
+ssh username@192.168.2.104
+```
+
+> *Ganti dengan username dan IP server master Anda*
+
+✅ **Sudah masuk? Lanjut ke langkah berikutnya!**
+
+---
+
+### LANGKAH 2: Install ArgoCD
+
+ArgoCD akan diinstall di namespace khusus bernama `argocd`.
+
+#### Langkah 2.1: Buat Namespace untuk ArgoCD
+
+Ketik perintah ini:
+
+```bash
+kubectl create namespace argocd
+```
+
+> **Penjelasan:** Namespace itu seperti "folder" di Kubernetes. Kita buat folder khusus bernama `argocd` untuk menyimpan semua komponen ArgoCD.
+
+**Output:**
+```
+namespace/argocd created
+```
+
+#### Langkah 2.2: Install ArgoCD
+
+Sekarang install ArgoCD dengan perintah ini:
+
+```bash
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+```
+
+> **Penjelasan:** Perintah ini mendownload file konfigurasi ArgoCD dari internet dan langsung menginstallnya ke namespace `argocd`.
+
+**Tunggu sampai selesai!** Prosesnya sekitar 10-20 detik.
+
+#### Langkah 2.3: Cek Apakah Semua Komponen Sudah Jalan
+
+ArgoCD punya beberapa komponen (Server, Repo Server, Redis, dll). Kita harus pastikan semuanya sudah running.
+
+Ketik:
+
+```bash
+kubectl get pods -n argocd
+```
+
+**Output awal (masih proses):**
+```
+NAME                                               READY   STATUS              RESTARTS   AGE
+argocd-application-controller-0                    0/1     ContainerCreating   0          30s
+argocd-applicationset-controller-xxxxxxxxxx-xxxxx  0/1     ContainerCreating   0          30s
+argocd-dex-server-xxxxxxxxxx-xxxxx                 0/1     Init:0/1            0          30s
+argocd-notifications-controller-xxxxxxxxxx-xxxxx   0/1     ContainerCreating   0          30s
+argocd-redis-xxxxxxxxxx-xxxxx                      0/1     ContainerCreating   0          30s
+argocd-repo-server-xxxxxxxxxx-xxxxx                0/1     Init:0/1            0          30s
+argocd-server-xxxxxxxxxx-xxxxx                     0/1     ContainerCreating   0          30s
+```
+
+**Tunggu 2-3 menit**, lalu ketik perintah yang sama lagi:
+
+```bash
+kubectl get pods -n argocd
+```
+
+**Output yang diharapkan (semua sudah Running):**
+```
+NAME                                               READY   STATUS    RESTARTS   AGE
+argocd-application-controller-0                    1/1     Running   0          3m
+argocd-applicationset-controller-xxxxxxxxxx-xxxxx  1/1     Running   0          3m
+argocd-dex-server-xxxxxxxxxx-xxxxx                 1/1     Running   0          3m
+argocd-notifications-controller-xxxxxxxxxx-xxxxx   1/1     Running   0          3m
+argocd-redis-xxxxxxxxxx-xxxxx                      1/1     Running   0          3m
+argocd-repo-server-xxxxxxxxxx-xxxxx                1/1     Running   0          3m
+argocd-server-xxxxxxxxxx-xxxxx                     1/1     Running   0          3m
+```
+
+> **Yang penting:** Kolom `STATUS` harus semua `Running` dan `READY` harus `1/1`.
+
+⚠️ **Kalau masih ada yang `Pending` atau `ContainerCreating`:**
+- Tunggu 1-2 menit lagi
+- Ketik perintah `kubectl get pods -n argocd` lagi
+- Kalau lebih dari 5 menit masih belum `Running`, cek apakah server punya cukup resource (RAM/CPU)
+
+✅ **Semua sudah `Running`? Lanjut!**
+
+---
+
+### LANGKAH 3: Ambil Password Admin
+
+ArgoCD otomatis membuatkan akun admin dengan password acak. Kita perlu ambil password ini untuk login.
+
+#### Langkah 3.1: Lihat Password
+
+Ketik perintah ini:
+
+```bash
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
+```
+
+**Output:**
+Akan muncul password acak seperti ini:
+```
+a7fJ9kL2mN4pQ6rT
+```
+
+📝 **PENTING:**
+1. **COPY password ini**
+2. **SIMPAN** di Notepad atau aplikasi catatan
+3. Jangan hilangkan! Ini password untuk login ke dashboard ArgoCD
+
+✅ **Password sudah tersimpan? Lanjut ke langkah berikutnya!**
+
+---
+
+### LANGKAH 4: Akses Dashboard ArgoCD
+
+Sekarang kita akan buka dashboard ArgoCD di browser.
+
+#### Langkah 4.1.1: Buat "Terowongan" ke Dashboard (Port Forwarding)
+
+Dashboard ArgoCD secara default hanya bisa diakses dari dalam cluster. Kita perlu membuat "terowongan" agar bisa diakses dari laptop/komputer kita.
+
+Ketik perintah ini:
+
+```bash
+kubectl port-forward svc/argocd-server -n argocd 8080:443
+```
+
+> **Penjelasan:** Perintah ini membuat "terowongan" dari laptop Anda (port 8080) ke dashboard ArgoCD di cluster (port 443).
+
+**Output:**
+```
+Forwarding from 127.0.0.1:8080 -> 8080
+Forwarding from [::1]:8080 -> 8080
+```
+
+⚠️ **PENTING:**
+- **JANGAN TUTUP terminal ini!** Biarkan tetap terbuka.
+- Kalau Anda tutup terminal, terowongan akan terputus dan dashboard tidak bisa diakses.
+- Kalau tidak sengaja tertutup, jalankan perintah `kubectl port-forward` lagi.
+
+#### Langkah 4.1.2: Dengan memanfaatkan Ingress
+
+Jika tidak ingin menggunakan `port forwarding` dan telah melakukan `instalasi ingress` di cluster kubernetes, bisa memanfaatkan `ingress sebagai gateway ke ArgoCD` dengan menggunakan konfigurasi yaml seperti di bawah ini:
+
+```bash
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: argo-ingress
+  namespace: argocd
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    nginx.ingress.kubernetes.io/proxy-ssl-verify: "off"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/use-gzip: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - argo
+  rules:
+  - host: argo
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: argocd-server
+            port:
+              number: 443
+```
+
+Setelah membuat konfigurasinya, bisa melakukan apply dengan perintah berikut:
+
+```bash
+kubectl apply -f nama-konfigurasi-ingress.yaml
+```
+
+> **PENTING!** jangan lupa untuk menambahkan nama `hosts` yang ada di `konfigurasi ingress` ke `/etc/hosts` di server baremetal dan device pribadi.
+
+```bash
+sudo vim /etc/hosts
+```
+
+tambahkan baris di bawah ini untuk server baremetal:
+
+```bash
+127.0.0.1   argo
+```
+
+dan tambahkan baris ini untuk device pribadi:
+
+```bash
+IP-SERVER   argo
+```
+
+#### Langkah 4.2: Buka Browser
+
+1. Buka **Chrome**, **Firefox**, atau **Edge**
+2. Jika menggunakan port forwading, di address bar, ketik:
+
+```
+https://localhost:8080
+```
+
+3. Jika menggunakan Ingress, ketik:
+
+```
+https://argo:8080
+```
+
+3. Tekan Enter
+
+#### Langkah 4.3: Bypass Warning Keamanan
+
+**Akan muncul WARNING** dengan tulisan "Your connection is not private" atau sejenisnya.
+
+**Ini NORMAL!** ArgoCD pakai sertifikat self-signed.
+
+**Cara bypass:**
+
+**Di Google Chrome:**
+1. Klik **"Advanced"** → **"Proceed to localhost (unsafe)"**
+
+**Di Mozilla Firefox:**
+1. Klik **"Advanced"** → **"Accept the Risk and Continue"**
+
+**Di Microsoft Edge:**
+1. Klik **"Advanced"** → **"Continue to localhost (unsafe)"**
+
+#### Langkah 4.4: Halaman Login Muncul!
+
+Setelah bypass, Anda akan melihat halaman login ArgoCD dan bisa langsung melakukan login ke dashboard.
+
+#### Langkah 4.5: Login
+
+1. **Username:** Ketik `admin`
+2. **Password:** Paste password yang Anda simpan di LANGKAH 3
+3. Klik tombol **"SIGN IN"**
+
+#### Langkah 4.6: Masuk ke Dashboard! 🎉
+
+**Kalau berhasil, Anda akan masuk ke dashboard ArgoCD!**
+
+Tampilan awal akan kosong (belum ada aplikasi). Anda akan melihat:
+- Menu di sebelah kiri (Applications, Settings, dll)
+- Tombol **"+ NEW APP"** di kiri atas
+- Area kosong di tengah (karena belum ada aplikasi)
+
+🎉 **SELAMAT! ArgoCD sudah terinstall dan bisa diakses!**
+
+---
+
+### LANGKAH 5: Hubungkan dengan Repository Git (GitLab)
+
+Sekarang kita akan menghubungkan ArgoCD dengan repository Git Anda yang berisi file YAML Kubernetes.
+
+**Ada 2 cara:**
+- **Repository Public** (gratis, bisa diakses siapa saja) → Langkah lebih mudah
+- **Repository Private** (hanya Anda yang bisa akses) → Butuh token
+
+#### CARA A: Untuk Repository PUBLIC (GitLab Public)
+
+**Langsung ke LANGKAH 6!** tidak perlu setup apa-apa, tinggal tambah aplikasi saja.
+
+---
+
+#### CARA B: Untuk Repository PRIVATE (GitLab Private)
+
+Kalau repository Anda **PRIVATE**, ArgoCD perlu "kunci akses" untuk bisa membaca repository.
+
+##### Langkah 5B.1: Buat Token Akses di GitLab
+
+**Untuk GitLab:**
+
+1. Login ke **GitLab** Anda
+2. Buka menu **User Setting** (bisa dengan menekan **Preferences** di menu profil)
+3. Klik menu **Personal Access Token** (di menu kiri)
+4. Klik **"Add new token"**
+5. Isi form:
+   - **Token name:** `argocd-connect` (atau nama bebas)
+   - **Expiration date:** Kosongkan (atau set tanggal jauh ke depan)
+   - **Select scopes:** Centang `read_repository` (atau boleh semuanya jika butuh)
+6. Klik **"Generate Token"**
+7. **COPY token** yang muncul (hanya muncul sekali!)
+8. **SIMPAN** di Notepad
+
+##### Langkah 5B.2: Daftarkan Repository ke ArgoCD
+
+Sekarang kita masukkan "kunci" (token) ke ArgoCD.
+
+1. **Di dashboard ArgoCD**, klik icon **"Gerigi" (Settings)** di menu kiri
+2. Klik **"Repositories"**
+3. Klik tombol **"+ CONNECT REPO"** (di kanan atas)
+4. Pilih **"VIA HTTPS"**
+5. Isi form:
+
+**Untuk GitLab:**
+- **Type:** `git`
+- **Name:** `Isikan dengan nama projectnya`
+- **Project:** `default`
+- **Repository URL:** Paste URL repository Anda (contoh: `https://gitlab.com/username/nama-repo.git`)
+- **Username:** Ketik `oauth2` (atau username GitLab Anda)
+- **Password:** Paste **token** yang Anda copy tadi
+- **TLS client certificate:** Kosongkan
+- **TLS client certificate key:** Kosongkan
+
+6. Klik **"CONNECT"**
+
+**Tanda berhasil:**
+- Akan muncul baris baru dengan **status "Successful"** dan centang hijau
+- Artinya ArgoCD sudah bisa akses repository Anda
+
+✅ **Repository sudah terhubung!**
+
+---
+
+### LANGKAH 6: Buat Aplikasi Pertama
+
+Ini adalah langkah paling penting. Kita akan memberitahu ArgoCD:
+- Repository Git mana yang harus diawasi
+- Folder mana yang berisi file YAML
+- Deploy ke namespace mana
+
+#### Langkah 6.1: Klik Tombol "+ NEW APP"
+
+Di dashboard ArgoCD bagian **Application** (kiri atas), klik tombol besar **"+ NEW APP"**.
+
+#### Langkah 6.2: Isi Form GENERAL
+
+**Application Name:**
+Ketik nama aplikasi Anda, misalnya: `my-app-production`
+
+**Project Name:**
+Pilih: `default`
+
+**SYNC POLICY:**
+- Klik dropdown, pilih **"Automatic"** (sangat penting!)
+- Akan muncul checkbox di bawahnya:
+  - ✅ **Centang "ENABLE AUTO-SYNC"** - Biarkan, jangan di hilangkan
+  - ✅ **Centang "PRUNE RESOURCES"** - Kalau file dihapus di Git, hapus juga di cluster
+  - ✅ **Centang "SELF HEAL"** - Kalau ada yang edit manual di cluster, kembalikan ke settingan Git
+
+**Penjelasan SYNC POLICY:**
+- **Automatic:** ArgoCD otomatis deploy setiap ada perubahan di Git
+- **PRUNE:** Hapus resource yang sudah tidak ada di Git
+- **SELF HEAL:** Tolak perubahan manual, selalu ikut Git
+
+#### Langkah 6.3: Isi Form SOURCE (Dari Mana)
+
+**Repository URL:**
+
+**Untuk Repository PUBLIC:**
+- Ketik URL repository Anda (contoh: `https://gitlab.com/username/k8s-manifests.git`)
+
+**Untuk Repository PRIVATE:**
+- Klik dropdown - repository yang Anda daftarkan di LANGKAH 5B.3 akan muncul
+- Pilih repository tersebut
+
+**Revision:**
+- Ketik: `HEAD` (artinya: selalu ambil commit terbaru)
+- Atau ketik nama branch spesifik, misalnya: `main` atau `master`
+
+**Path:**
+- Ketik nama **folder** tempat file YAML berada
+- Contoh: `manifests` atau `k8s` atau `deployment`
+- Kalau file YAML ada di **root repository** (tidak ada folder), ketik: `.` (titik)
+
+**Penjelasan:** ArgoCD akan melihat semua file `.yaml` atau `.yml` di folder ini.
+
+#### Langkah 6.4: Isi Form DESTINATION (Ke Mana)
+
+**Cluster URL:**
+- Pilih: `https://kubernetes.default.svc` (ini adalah cluster lokal tempat ArgoCD berada)
+
+**Namespace:**
+- Ketik nama namespace tujuan aplikasi Anda
+- Contoh: `production` atau `my-app` atau `default`
+
+**Auto-Create Namespace:**
+- ✅ **Centang** kalau namespace belum ada (ArgoCD akan otomatis bikin)
+
+#### Langkah 6.5: Buat Aplikasi
+
+Scroll ke atas, klik tombol **"CREATE"** di kiri atas.
+
+#### Langkah 6.6: Lihat Magic Terjadi! ✨
+
+Setelah klik CREATE:
+
+1. Anda akan kembali ke halaman Applications
+2. Akan muncul **card baru** dengan nama aplikasi Anda
+3. Status awal: **"OutOfSync"** (warna kuning) - sedang proses
+4. Tunggu 10-30 detik
+5. Status berubah jadi: **"Synced"** (warna hijau) dan **"Healthy"** (centang hijau)
+
+**Klik card aplikasi tersebut!**
+
+Anda akan melihat **peta topologi** yang menunjukkan:
+- Deployment (kotak biru)
+- Service (kotak hijau)
+- Pods (lingkaran)
+- Ingress (kalau ada)
+- Dan semua resource lainnya
+
+🎉 **SELAMAT! Aplikasi pertama Anda sudah di-deploy oleh ArgoCD!**
+
+---
+
+### LANGKAH 7: Tes GitOps (Autopilot Mode!)
+
+Sekarang kita akan buktikan bahwa ArgoCD bekerja secara otomatis.
+
+**Tantangan: Deploy aplikasi TANPA menyentuh terminal atau kubectl!**
+
+#### Langkah 7.1: Buka Repository Git di Browser
+
+1. Buka **GitLab** di browser
+2. Masuk ke repository yang Anda hubungkan tadi
+3. Buka folder yang berisi file YAML (sesuai Path di LANGKAH 6.3)
+
+#### Langkah 7.2: Edit File YAML
+
+Contoh: Ubah jumlah replicas
+
+1. Klik file **`deployment.yaml`** (atau file deployment Anda)
+2. Klik tombol **"Edit"** (icon pensil)
+3. Cari baris:
+
+```yaml
+spec:
+  replicas: 2
+```
+
+4. **Ubah** angka `2` menjadi `3`
+5. Scroll ke bawah, klik **"Commit changes"**
+6. Klik **"Commit changes"** lagi di pop-up
+
+#### Langkah 7.3: Kembali ke Dashboard ArgoCD
+
+1. Buka tab **ArgoCD** di browser
+2. Klik **card aplikasi** Anda
+3. **Tunggu 1-3 menit** (ArgoCD cek Git setiap 3 menit)
+4. Atau klik tombol **"REFRESH"** untuk mempercepat
+
+#### Langkah 7.4: Lihat Magic Terjadi!
+
+**Anda akan melihat:**
+1. Status berubah jadi **"OutOfSync"** sebentar (ArgoCD deteksi ada perubahan)
+2. Lalu ArgoCD otomatis melakukan sync
+3. Di peta topologi, **pod baru akan muncul**!
+4. Sekarang ada **3 pods** bukan 2 lagi
+5. Status kembali jadi **"Synced"** dan **"Healthy"**
+
+**TANPA MENGETIK `kubectl apply` SAMA SEKALI!**
+
+🎉 **Ini adalah GitOps!** Git adalah sumber kebenaran. Cluster selalu mengikuti apa yang ada di Git.
+
+---
+
+## 🎨 Fitur-Fitur Dashboard ArgoCD
+
+### 1. Lihat Status Semua Aplikasi
+
+- Klik **"Applications"** di menu kiri
+- Anda akan lihat semua aplikasi dalam bentuk card
+- Warna hijau = sehat, kuning = proses, merah = error
+
+### 2. Lihat Detail Aplikasi (Topology)
+
+- Klik salah satu card aplikasi
+- Akan muncul **peta topologi interaktif**
+- Bisa klik setiap komponen untuk lihat detail
+
+### 3. Lihat Log Pods
+
+- Klik card aplikasi → Klik pod di topologi
+- Klik tab **"LOGS"**
+- Anda bisa lihat log real-time
+
+### 4. Manual Sync (Kalau Perlu)
+
+- Klik card aplikasi
+- Klik tombol **"SYNC"** di atas
+- Klik **"SYNCHRONIZE"**
+- ArgoCD akan langsung deploy perubahan tanpa tunggu 3 menit
+
+### 5. Rollback ke Versi Lama
+
+- Klik card aplikasi
+- Klik tab **"HISTORY AND ROLLBACK"**
+- Pilih versi lama (commit sebelumnya)
+- Klik **"ROLLBACK"**
+
+### 6. Lihat Diff (Perbedaan)
+
+- Klik card aplikasi
+- Klik tab **"APP DIFF"**
+- Anda bisa lihat perbedaan antara Git vs Cluster
+
+---
+
+## 😰 Troubleshooting - Kalau Ada Masalah
+
+### Masalah 1: Aplikasi Status "OutOfSync" Terus
+
+**Gejala:** Status kuning terus, tidak pernah jadi "Synced"
+
+**Penyebab:** Ada error di file YAML
+
+**Solusi:**
+1. Klik card aplikasi
+2. Scroll ke bawah, lihat bagian **"CONDITIONS"**
+3. Akan ada pesan error, misalnya:
+   - `Error: ImagePullBackOff` = Image container tidak ditemukan
+   - `Error: CrashLoopBackOff` = Aplikasi crash terus
+4. Perbaiki error di file YAML di Git
+5. Commit perubahan
+6. ArgoCD akan otomatis retry
+
+---
+
+### Masalah 2: Tidak Bisa Login (Wrong Password)
+
+**Solusi:**
+
+Generate password baru:
+
+```bash
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
+```
+
+Copy password yang muncul, coba login lagi.
+
+---
+
+### Masalah 3: Port Forward Terputus
+
+**Gejala:** Dashboard tidak bisa diakses, muncul "Connection refused"
+
+**Penyebab:** Terminal port-forward tertutup
+
+**Solusi:**
+
+Jalankan ulang perintah port-forward:
+
+```bash
+kubectl port-forward svc/argocd-server -n argocd 8080:443
+```
+
+Biarkan terminal tetap terbuka.
+
+---
+
+### Masalah 4: Repository Private Tidak Bisa Terhubung
+
+**Gejala:** Saat CONNECT REPO, muncul error "authentication failed"
+
+**Solusi:**
+
+1. **Cek token masih valid:**
+   - Login ke GitLab
+   - Cek apakah token belum expired
+   
+2. **Pastikan scope/permission benar:**
+   - GitLab: Token harus punya scope `read_repository`
+
+3. **Generate token baru:**
+   - Ulangi LANGKAH 5B
+   - Hapus repository lama di ArgoCD (Settings → Repositories → klik titik tiga → Delete)
+   - Daftarkan lagi dengan token baru
+
+---
+
+### Masalah 5: Pods ArgoCD CrashLoopBackOff
+
+**Penyebab:** Resource server kurang (RAM/CPU)
+
+**Solusi:**
+
+Cek resource:
+```bash
+kubectl top nodes
+```
+
+Kalau CPU/Memory >90%, Anda perlu:
+- Upgrade resource server
+- Atau kurangi aplikasi lain
+
+---
+
+### Masalah 6: Self Heal Tidak Bekerja
+
+**Gejala:** Kalau edit manual `kubectl edit`, tidak otomatis dikembalikan
+
+**Penyebab:** Self Heal tidak dicentang saat buat aplikasi
+
+**Solusi:**
+
+1. Klik card aplikasi
+2. Klik tombol **"APP DETAILS"** (di atas)
+3. Cari bagian **"SYNC POLICY"**
+4. Klik **"ENABLE AUTO-SYNC"**
+5. Centang **"SELF HEAL"**
+6. Klik **"OK"**
+
+---
+
+## 🔒 Keamanan & Best Practices
+
+### 1. Ubah Password Admin Default
+
+Setelah login pertama kali, ubah password:
+
+1. Klik **"User Info"** (icon user di kanan atas)
+2. Klik **"Update password"**
+3. Masukkan password lama dan password baru
+4. Klik **"Save new password"**
+
+### 2. Gunakan Repository Private
+
+Untuk aplikasi production, gunakan repository private dan set token dengan permission minimal (read-only).
+
+### 3. Gunakan Branching
+
+- `main` branch → Production
+- `staging` branch → Staging
+- `dev` branch → Development
+
+---
+
+## 📚 Perintah Penting untuk Dicatat
+
+```bash
+# Cek pods ArgoCD
+kubectl get pods -n argocd
+
+# Ambil password admin
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
+
+# Port forward untuk akses dashboard
+kubectl port-forward svc/argocd-server -n argocd 8080:443
+
+# Restart ArgoCD kalau bermasalah
+kubectl rollout restart deployment -n argocd
+
+# Hapus password default (setelah ubah password)
+kubectl -n argocd delete secret argocd-initial-admin-secret
+
+# Uninstall ArgoCD
+kubectl delete -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+kubectl delete namespace argocd
+```
+
+---
+
+## 🎓 Kesimpulan
+
+**Apa yang sudah Anda capai:**
+
+✅ ArgoCD terinstall dan berjalan di cluster  
+✅ Dashboard ArgoCD bisa diakses  
+✅ Repository Git (public/private) sudah terhubung  
+✅ Aplikasi pertama sudah di-deploy otomatis  
+✅ GitOps berjalan - Git adalah sumber kebenaran  
+
+**Workflow Anda sekarang:**
+1. Edit file YAML di Git (di browser atau VS Code)
+2. Commit & push
+3. **Selesai!** ArgoCD akan otomatis deploy
+
+**Tidak perlu lagi:**
+- ❌ SSH ke server
+- ❌ `kubectl apply -f ...`
+- ❌ Manual deployment
+- ❌ Takut lupa deploy
+
+---
