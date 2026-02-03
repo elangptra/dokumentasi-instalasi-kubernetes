@@ -70,7 +70,7 @@ namespace/argocd created
 Sekarang install ArgoCD dengan perintah ini:
 
 ```bash
-kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+kubectl apply -n argocd --server-side --force-conflicts -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 ```
 
 > **Penjelasan:** Perintah ini mendownload file konfigurasi ArgoCD dari internet dan langsung menginstallnya ke namespace `argocd`.
