@@ -1,21 +1,22 @@
 # 📖 Panduan Instalasi NGINX Ingress Controller
 
-Dokumen ini menjelaskan langkah-langkah instalasi dan konfigurasi **NGINX Ingress Controller** pada cluster Kubernetes berbasis **k3d**. Panduan ini mencakup instalasi controller, penyesuaian *port mapping*, dan konfigurasi Ingress resource.
+Dokumen ini menjelaskan langkah-langkah instalasi dan konfigurasi **NGINX Ingress Controller** pada cluster Kubernetes. Panduan ini mencakup instalasi controller, penyesuaian *port mapping*, dan konfigurasi Ingress resource.
 
 ## 🧠 Konsep Dasar
 
-Sebelum memulai, pahami perbedaan dua komponen berikut:
+Sebelum memulai, pastikan sudah memiliki sebuah cluster kubernetes yang sudah running. Jika belum ada, bisa melihat [ dokumentasi instalasi kubernetes ini ]( https://github.com/elangptra/dokumentasi-kubernetes/blob/main/Instalasi-kubernetes-3-node-cluster.md ).
+
+
+Setelah itu, pahami perbedaan dua komponen berikut:
 
 1. **Nginx Web Server (Aplikasi):** Melayani konten web (berjalan di dalam pod `cetakan-app`).
 2. **Nginx Ingress Controller (Gateway):** Bertugas sebagai router/"satpam" yang mengatur lalu lintas dari luar cluster menuju aplikasi.
 
 ---
 
-## 🛠️ Langkah 1: Instalasi Controller (Baremetal)
+## 🛠️ Langkah 1: Instalasi Controller
 
-Kita menggunakan manifest versi *baremetal* yang ringan dan kompatibel dengan k3d.
-
-Jalankan perintah berikut di terminal:
+Sebagai langkah awal instalasi ingress, Jalankan perintah berikut di terminal:
 
 ```bash
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.2/deploy/static/provider/baremetal/deploy.yaml
@@ -163,4 +164,4 @@ Pastikan domain sudah terdaftar.
 
 2. **Buka Browser:**
 Akses alamat berikut (wajib menyertakan port):
-👉 **[http://cetakan-local.192.168.4.100.sslip.io:30000](http://cetakan-local.192.168.4.100.sslip.io:30000)**
+👉 **[http://cetakan-local](http://cetakan-local)**
