@@ -44,21 +44,21 @@ Dokumen ini menjelaskan alur kerja deployment aplikasi (GitOps Workflow) ke dala
 ## 1. PRASYARAT (MANDATORY)
 **Sangat Penting:** Sebelum melanjutkan tahap ini, pastikan infrastruktur berikut **sudah terinstall dan berjalan** di cluster:
 
-> 1.  **Cluster Kubernetes** (Running & Healthy)
-> 2.  **Akun GitLab** (Untuk Repository & Registry)
-> 3.  **ArgoCD** (CD Controller)
-> 4.  **MetalLB** (Load Balancer Controller)
-> 5.  **Ingress NGINX** (Ingress Controller)
+> 1.  **[Cluster Kubernetes](Instalasi-kubernetes-3-node-cluster.md)** (Running & Healthy)
+> 2.  **[Akun GitLab](https://gitlab.com)** (Untuk Repository & Registry)
+> 3.  **[ArgoCD](instalasi-dan-penggunaan-argocd.md)** (CD Controller)
+> 4.  **[MetalLB](instalasi-ingress-metallb.md)** (Load Balancer Controller)
+> 5.  **[Ingress NGINX](instalasi-ingress-metallb.md)** (Ingress Controller)
 > 6.  **External Secret Operator** (Secret Management)
-> 7.  **Images** (Builded Image)
+> 7.  **[Images](https://dockerhub.com)** (Builded Image)
 > 8.  **Headlamp** *(Opsional - UI Dashboard)*
-> 9.  **Grafana** *(Opsional - Monitoring)*
+> 9.  **[Grafana](Instalasi-grafana-prometheus-loki.md)** *(Opsional - Monitoring)*
 
 
 ## 2. SETUP CONFIGURASI GITLAB
 
 ### 2.1 Buat Repository GITLAB
-membuat wadah penyimpanan kode (repository) di GitLab.
+membuat wadah penyimpanan kode (repository) di [GitLab](github.com).
 
 1.  Masuk ke dashboard GitLab.
 2.  Navigasi ke menu **Projects** > **New project**.
