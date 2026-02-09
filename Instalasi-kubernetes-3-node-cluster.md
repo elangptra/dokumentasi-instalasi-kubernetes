@@ -1,4 +1,4 @@
-# 📘 Panduan Setup Kubernetes 3-Node Cluster
+# Panduan Setup Kubernetes 3-Node Cluster
 
 ### Kubernetes v1.35.0 + containerd + Calico Tigera
 
@@ -12,7 +12,7 @@ Dokumentasi ini menjelaskan langkah-demi-langkah membuat cluster Kubernetes deng
 
 ---
 
-## 🧩 1. Arsitektur & Topologi
+## 1. Arsitektur & Topologi
 
 Cluster akan memiliki struktur seperti di bawah ini:
 
@@ -34,7 +34,7 @@ Cluster akan memiliki struktur seperti di bawah ini:
 
 ---
 
-## 🛠 2. Tujuan Setup
+## 2. Tujuan Setup
 
 Dengan panduan ini, Anda akan mendapatkan:
 
@@ -45,7 +45,7 @@ Dengan panduan ini, Anda akan mendapatkan:
 
 ---
 
-## 🔑 3. Persiapan Dasar (Wajib di Semua Node)
+## 3. Persiapan Dasar (Wajib di Semua Node)
 
 **📍 Langkah ini dilakukan di semua server:**
 - `k8s-master`
@@ -146,7 +146,7 @@ sudo sysctl --system
 
 ---
 
-## 🐳 4. Install containerd (di Semua Node)
+## 4. Install containerd (di Semua Node)
 
 containerd adalah software yang menjalankan container di dalam Kubernetes.
 
@@ -231,7 +231,7 @@ sudo systemctl status containerd
 
 ---
 
-## 🚀 5. Install Kubernetes (di Semua Node)
+## 5. Install Kubernetes (di Semua Node)
 
 ### 5.1 Tambahkan Repository Kubernetes
 
@@ -278,7 +278,7 @@ sudo apt-mark hold kubeadm kubectl kubelet
 
 ---
 
-## 🧠 6. Inisialisasi Cluster (Master Node Saja)
+## 6. Inisialisasi Cluster (Master Node Saja)
 
 **⚠️ HANYA jalankan di Master Node!**
 
@@ -316,7 +316,7 @@ Anda akan melihat master node dengan status `NotReady` - ini normal karena netwo
 
 ---
 
-## 🌐 7. Install Calico Tigera (Master Node Saja)
+## 7. Install Calico Tigera (Master Node Saja)
 
 Calico adalah plugin networking yang membuat pod bisa berkomunikasi.
 
@@ -395,7 +395,7 @@ Master node sekarang seharusnya sudah `Ready`!
 
 ---
 
-## 🤝 8. Join Worker Node ke Master (Worker Node Saja)
+## 8. Join Worker Node ke Master (Worker Node Saja)
 
 **⚠️ Sebelum melakukan langkah ini, pastikan Worker Node sudah menyelesaikan langkah 3, 4, dan 5!**
 
@@ -455,7 +455,7 @@ Ulangi perintah `kubeadm join`.
 
 ---
 
-## 🧪 9. Verifikasi Cluster
+## 9. Verifikasi Cluster
 
 Kembali ke master node, cek semua nodes:
 
@@ -484,7 +484,7 @@ Semua pods harus berstatus `Running`.
 
 ---
 
-## 🎯 10. Hasil Akhir
+## 10. Hasil Akhir
 
 Selamat! Anda sekarang memiliki:
 
@@ -498,7 +498,7 @@ Cluster siap digunakan untuk deploy aplikasi! 🚀
 
 ---
 
-## 📊 11. Install Metrics Server (Master Node Saja)
+## 11. Install Metrics Server (Master Node Saja)
 
 Metrics Server adalah komponen yang mengumpulkan data penggunaan CPU dan Memory dari setiap node dan pod. Data ini berguna untuk:
 - Melihat resource usage dengan `kubectl top`
@@ -634,7 +634,7 @@ kubectl rollout restart deployment metrics-server -n kube-system
 
 ---
 
-## 🧪 12. Test Deployment Sederhana (Opsional)
+## 12. Test Deployment Sederhana (Opsional)
 
 Untuk memastikan cluster benar-benar berfungsi, coba deploy aplikasi sederhana:
 
@@ -661,7 +661,7 @@ kubectl delete service nginx
 
 ---
 
-## 📚 13. Perintah Berguna
+## 13. Perintah Berguna
 
 ### Perintah Dasar
 ```bash
@@ -720,7 +720,7 @@ kubectl describe pod <nama-pod> -n <namespace>
 
 ---
 
-## 📎 14. Referensi
+## 14. Referensi
 
 - [Dokumentasi Kubernetes](https://kubernetes.io/docs)
 - [Dokumentasi Calico](https://projectcalico.docs.tigera.io)
