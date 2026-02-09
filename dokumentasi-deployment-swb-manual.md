@@ -18,8 +18,8 @@ Setelah mengikuti panduan ini:
 - **Waktu:** 30-60 menit
 - **Tingkat Kesulitan:** Menengah
 - **Yang Dibutuhkan:**
-  - Cluster Kubernetes yang sudah jalan. Jika belum ada, bisa melihat proses instalasi cluster di [ dokumentasi ini ]( https://github.com/elangptra/dokumentasi-kubernetes/blob/main/Instalasi-kubernetes-3-node-cluster.md )
-  - MetalLB & NGINX Ingress sudah terinstall. Jika belum, lihat di [ dokumentasi ini ]( https://github.com/elangptra/dokumentasi-kubernetes/blob/main/instalasi-ingress-metallb.md )
+  - Cluster Kubernetes yang sudah jalan. Jika belum ada, bisa melihat proses instalasi cluster di [ dokumentasi ini ]( 1.%20Instalasi-kubernetes-3-node-cluster.md )
+  - MetalLB & NGINX Ingress sudah terinstall. Jika belum, lihat di [ dokumentasi ini ]( 2.%20instalasi-ingress-metallb.md )
   - Docker image SWB sudah di-build
   - SSL certificate (tls.crt & tls.key)
   - Akses ke Docker Hub atau registry lain (untuk push image)
