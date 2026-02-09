@@ -44,15 +44,15 @@ Dokumen ini menjelaskan alur kerja deployment aplikasi (GitOps Workflow) ke dala
 ## 1. PRASYARAT (MANDATORY)
 **Sangat Penting:** Sebelum melanjutkan tahap ini, pastikan infrastruktur berikut **sudah terinstall dan berjalan** di cluster:
 
-> 1.  **[Cluster Kubernetes](Instalasi-kubernetes-3-node-cluster.md)** (Running & Healthy)
+> 1.  **[Cluster Kubernetes](1.%20Instalasi-kubernetes-3-node-cluster.md)** (Running & Healthy)
 > 2.  **[Akun GitLab](https://gitlab.com)** (Untuk Repository & Registry)
-> 3.  **[ArgoCD](instalasi-dan-penggunaan-argocd.md)** (CD Controller)
-> 4.  **[MetalLB](instalasi-ingress-metallb.md)** (Load Balancer Controller)
-> 5.  **[Ingress NGINX](instalasi-ingress-metallb.md)** (Ingress Controller)
-> 6.  **[External Secret Operator](instalasi-externa-secret-operator.md)** (Secret Management)
+> 3.  **[ArgoCD](5.%20instalasi-dan-penggunaan-argocd.md)** (CD Controller)
+> 4.  **[MetalLB](2.%20instalasi-ingress-metallb.md)** (Load Balancer Controller)
+> 5.  **[Ingress NGINX](2.%20instalasi-ingress-metallb.md)** (Ingress Controller)
+> 6.  **[External Secret Operator](3.%20instalasi-external-secret-operator.md)** (Secret Management)
 > 7.  **[Images](https://dockerhub.com)** (Builded Image)
-> 8.  **[Headlamp](instalasi-headlamp-dashboard.md)** *(Opsional - UI Dashboard)*
-> 9.  **[Grafana](Instalasi-grafana-prometheus-loki.md)** *(Opsional - Monitoring)*
+> 8.  **[Headlamp](4.%20instalasi-headlamp-dashboard.md)** *(Opsional - UI Dashboard)*
+> 9.  **[Grafana](6.%20Instalasi-grafana-prometheus-loki.md)** *(Opsional - Monitoring)*
 
 
 ## 2. SETUP CONFIGURASI GITLAB
