@@ -13,7 +13,7 @@ Setelah mengikuti panduan ini:
 
 ---
 
-## ⏱️ Berapa Lama Prosesnya?
+## Berapa Lama Prosesnya?
 
 - **Waktu:** 15-20 menit
 - **Tingkat Kesulitan:** Mudah
