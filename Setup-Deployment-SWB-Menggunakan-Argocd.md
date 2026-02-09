@@ -556,57 +556,62 @@ Langkah ini dilakukan melalui antarmuka grafis (Web UI) ArgoCD. Kita akan mendaf
 2.  Klik ikon **Gear ⚙️ (Settings)** pada menu *sidebar* sebelah kiri.
 3.  Pilih menu **Repositories**.
 
+> ![connect ke repo](images/choose%20settings.png)
 
+#### Tambahkan Repositori Baru
+1.  Klik tombol **+ CONNECT REPO** di bagian atas.
+2.  Formulir koneksi akan muncul. Isi dengan detail presisi berikut:
+
+| Parameter | Nilai / Instruksi |
+| :--- | :--- |
+| **Choose your connection method** | `VIA HTTPS` Karena koneksi kita menggunakan gitlab
+| **Type** | `git` (Biarkan default) |
+| **Project** | `default` |
+| **Repository URL** | Masukkan URL HTTPS GitLab Anda. |
+| **Username** | Ketik username akun GitLab Anda. |
+| **Password** | **PENTING:** Tempelkan **Personal Access Token (PAT)** di sini. <br>⚠️ *JANGAN masukkan password login GitLab biasa.* |
+| **TLS Client Cert** | (Kosongkan) |
+| **TLS Client Key** | (Kosongkan) |
+
+![alt](images/connect%20repos.png)
+
+> **PENTING !** <br>
+> **PASTIKAN STATUS REPO SUCCESSFUL** <br>
+> ![check status repo](images/pastikan%20connection%20status%20nya%20successful.png)
    
 #### Inisialisasi Aplikasi
 
+Setelah repositori terhubung, langkah selanjutnya adalah mendefinisikan spesifikasi aplikasi. Kita akan memberitahu ArgoCD **apa** yang harus dideploy (Source) dan **ke mana** tujuannya (Destination).
 
-1. Login ke Dashboard ArgoCD.
-2. Klik tombol + NEW APP di pojok kiri atas.
-3. Klik EDIT AS YAML (opsional) atau isi formulir manual seperti di bawah ini.
+#### Buka Menu Pembuatan
+1.  Klik tombol **+ NEW APP** di pojok kiri atas dashboard ArgoCD.
+2.  Akan muncul panel formulir panjang, ikuti panduan tabel di bawah ini.
 
-B. Parameter Konfigurasi
 
-Isi formulir dengan detail presisi berikut:
-1. General (Informasi Umum)
+| Parameter | Nilai / Instruksi | Keterangan Penting |
+| :--- | :--- | :--- |
+| **Application Name** | `swb-wahana` | Gunakan huruf kecil, tanpa spasi. |
+| **Project** | `default` | Project bawaan ArgoCD. |
+| **Sync Policy** | `manual` | **Wajib.** Agar ArgoCD otomatis mendeteksi update dari Git. |
+| **Sync Options** | ☑️ `Prune Resources` <br> ☑️ `Self Heal` | • **Prune:** Hapus resource di cluster jika file di Git dihapus. <br> • **Self Heal:** Koreksi otomatis jika ada perubahan manual di cluster. |
+| **Source - Repository URL** | *(Pilih URL Repo Anda)* | Pilih dari dropdown (karena sudah di-connect di [pembuatan koneksi repo](#inisialisasi-repository)). |
+| **Source - Revision** | `main` | Atau sesuaikan dengan branch untuk production. |
+| **Source - Path** | `.` | **Ketik tanda TITIK saja.** <br> Artinya "Root Directory". |
+| **Destination - Cluster URL** | `https://kubernetes.default.svc` | Pilih URL cluster lokal tempat ArgoCD berjalan. |
+| **Destination - Namespace** | `swb-wahana` | Namespace tujuan deployment. |
+| **Namespace Option** | ☑️ `Auto-Create Namespace` | **PENTING:** Centang kotak kecil ini agar Namespace dibuat otomatis. |
 
-    Application Name: swb-production (Identitas aplikasi di dashboard ArgoCD).
+#### Eksekusi
+1.  Cek kembali isian Anda.
+2.  Klik tombol **CREATE** di bagian atas panel.
+3.  Anda akan diarahkan ke tampilan *Card* aplikasi. Tunggu hingga status berubah dari **Processing** 🔄 menjadi **Healthy** 💚.
 
-    Project: default.
+> **Tips:**
+> Jika status tetap **OutOfSync** (Kuning) meski sudah pilih auto-sync, klik tombol **SYNC** > **SYNCHRONIZE** secara manual untuk pemicu awal.
 
-    Sync Policy: Automatic (Penting: Agar ArgoCD otomatis mendeteksi perubahan Git).
+![check status app swb](images/check%20status%20app%20swb.png)
 
-        [x] Prune Resources: (Centang - Menghapus resource di cluster jika file di Git dihapus).
-
-        [x] Self Heal: (Centang - Memaksa cluster kembali ke konfigurasi Git jika ada perubahan manual).
-
-2. Source (Sumber Manifest)
-
-    Repository URL: Masukkan URL HTTPS repositori GitLab Anda.
-
-        Contoh: https://gitlab.com/username/cetakan-wahana.git
-
-    Revision: HEAD (atau main).
-
-    Path: . (Ketik tanda titik).
-
-        Penjelasan: Tanda titik berarti "Root Directory". ArgoCD akan otomatis membaca file kustomization.yaml yang ada di sana.
-
-3. Destination (Target Cluster)
-
-    Cluster URL: https://kubernetes.default.svc (Cluster tempat ArgoCD berjalan).
-
-    Namespace: swb-app.
-
-        PENTING: Centang kotak kecil di sebelahnya: Auto-Create Namespace (Agar ArgoCD membuatkan namespace otomatis jika belum ada).
-
-3.3 Eksekusi & Monitoring
-
-    Klik tombol CREATE di bagian atas panel.
-
-    Aplikasi akan muncul dalam bentuk "Kartu" di dashboard utama.
-
-Status Indikator
+#### Status Indikator
 
 Perhatikan ikon status pada kartu aplikasi:
 
@@ -617,15 +622,3 @@ Perhatikan ikon status pada kartu aplikasi:
     ✅ Synced (Hijau): Konfigurasi di cluster sudah 100% sama dengan di Git.
 
     💔 Degraded (Merah): Ada error pada konfigurasi (misal: Image tidak ditemukan atau Secret salah).
-
-Validasi Detail
-
-Klik pada nama aplikasi swb-production untuk melihat visualisasi pohon (Tree View). Pastikan komponen berikut berwarna hijau:
-
-    Deployment: swb-app & nginx-proxy.
-
-    Service: swb-service & nginx-service.
-
-    ExternalSecret: swb-ssl-secret (Pastikan statusnya Synced).
-
-    Ingress: ingress-config.
