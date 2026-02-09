@@ -1,10 +1,10 @@
-# 🚀 Cara Instalasi ArgoCD di Kubernetes
+# Cara Instalasi ArgoCD di Kubernetes
 
 ### Panduan Lengkap instalasi ArgoCD untuk auto deployment di kubernetes!
 
 ---
 
-## 🎯 Apa yang Akan Anda Dapatkan?
+## Apa yang Akan di Dapatkan?
 
 Setelah mengikuti panduan ini:
 
@@ -17,7 +17,7 @@ Setelah mengikuti panduan ini:
 
 ---
 
-## ⏱️ Berapa Lama Prosesnya?
+## Berapa Lama Prosesnya?
 
 - **Waktu:** 20-30 menit
 - **Yang Dibutuhkan:** 
@@ -27,7 +27,7 @@ Setelah mengikuti panduan ini:
 
 ---
 
-## 📋 Langkah-Langkah Instalasi
+## Langkah-Langkah Instalasi
 
 ### LANGKAH 1: Masuk ke Server Master
 
@@ -430,7 +430,7 @@ Pilih: `default`
 
 Scroll ke atas, klik tombol **"CREATE"** di kiri atas.
 
-#### Langkah 6.6: Lihat Magic Terjadi! ✨
+#### Langkah 6.6: Proses Deployment
 
 Setelah klik CREATE:
 
@@ -489,7 +489,7 @@ spec:
 3. **Tunggu 1-3 menit** (ArgoCD cek Git setiap 3 menit)
 4. Atau klik tombol **"REFRESH"** untuk mempercepat
 
-#### Langkah 7.4: Lihat Magic Terjadi!
+#### Langkah 7.4: Proses Deployment!
 
 **Anda akan melihat:**
 1. Status berubah jadi **"OutOfSync"** sebentar (ArgoCD deteksi ada perubahan)
@@ -504,7 +504,7 @@ spec:
 
 ---
 
-## 🎨 Fitur-Fitur Dashboard ArgoCD
+## Fitur-Fitur Dashboard ArgoCD
 
 ### 1. Lihat Status Semua Aplikasi
 
@@ -546,7 +546,7 @@ spec:
 
 ---
 
-## 😰 Troubleshooting - Kalau Ada Masalah
+## Troubleshooting - Kalau Ada Masalah
 
 ### Masalah 1: Aplikasi Status "OutOfSync" Terus
 
@@ -652,7 +652,7 @@ Kalau CPU/Memory >90%, Anda perlu:
 
 ---
 
-## 🔒 Keamanan & Best Practices
+## Keamanan & Best Practices
 
 ### 1. Ubah Password Admin Default
 
@@ -675,7 +675,7 @@ Untuk aplikasi production, gunakan repository private dan set token dengan permi
 
 ---
 
-## 📚 Perintah Penting untuk Dicatat
+## Perintah Penting untuk Dicatat
 
 ```bash
 # Cek pods ArgoCD
@@ -700,9 +700,9 @@ kubectl delete namespace argocd
 
 ---
 
-## 🎓 Kesimpulan
+## Kesimpulan
 
-**Apa yang sudah Anda capai:**
+**Apa yang sudah tercapai:**
 
 ✅ ArgoCD terinstall dan berjalan di cluster  
 ✅ Dashboard ArgoCD bisa diakses  
@@ -710,7 +710,7 @@ kubectl delete namespace argocd
 ✅ Aplikasi pertama sudah di-deploy otomatis  
 ✅ GitOps berjalan - Git adalah sumber kebenaran  
 
-**Workflow Anda sekarang:**
+**Workflow saat ini:**
 1. Edit file YAML di Git (di browser atau VS Code)
 2. Commit & push
 3. **Selesai!** ArgoCD akan otomatis deploy
