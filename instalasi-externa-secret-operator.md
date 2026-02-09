@@ -1,0 +1,72 @@
+# External Secrets Operator (ESO) Installation
+
+Dokumen ini mencakup prosedur instalasi dan konfigurasi dasar External Secrets Operator pada cluster Kubernetes menggunakan Helm.
+
+## 1. Konfigurasi Repositori
+Tambahkan repositori *chart* resmi ESO ke dalam konfigurasi Helm lokal.
+
+```bash
+# Tambahkan repo
+helm repo add external-secrets https://charts.external-secrets.io
+
+# Perbarui indeks
+helm repo update
+```
+
+## 2. Instalasi (Helm Deployment)
+
+Jalankan perintah berikut untuk menginstal ESO ke dalam namespace khusus.
+
+>**[PENTING !!]**: Parameter `--set installCRDs=true` bersifat mandatori. Tanpa ini, Kubernetes tidak akan mengenali resource SecretStore atau ExternalSecret.
+
+```bash
+helm install external-secrets external-secrets/external-secrets \
+    -n external-secrets \
+    --create-namespace \
+    --set installCRDs=true
+```
+## 3. Verifikasi Status
+
+Pastikan seluruh komponen (controller, webhook, cert-controller) berstatus Running.
+Bash
+
+```bash
+kubectl get pods -n external-secrets
+```
+
+Output yang diharapkan:
+
+### 3. Verifikasi Instalasi
+Pastikan seluruh komponen infrastruktur External Secrets Operator (ESO) telah berjalan dengan status **Running**.
+
+| NAME | READY | STATUS | RESTART 
+| :--- | :--- | :--- | :--- 
+| `external-secrets-cert-controller-*` | 1/1 | **Running** | 0 |
+| `external-secrets-webhook-*` | 1/1 | **Running** | 0 |
+| `external-secrets-*` | 1/1 | **Running** | 0 |
+
+## Perintah Penting untuk Dicatat
+
+```bash
+# Cek pods external-secrets
+kubectl get pods -n external-secrets
+
+# Cek service external-secrets
+kubectl get svc -n external-secrets
+
+# Cek log external-secrets
+kubectl logs -n external-secrets deployment/external-secrets
+
+# Restart external-secrets
+kubectl rollout restart deployment external-secrets -n external-secrets
+
+# Uninstall external-secrets
+helm uninstall external-secrets -n external-secrets
+
+# Update external-secrets ke versi terbaru
+helm repo update
+helm upgrade external-secrets -n external-secrets
+
+# Lihat versi external-secrets yang terinstall
+helm list -n external-secrets
+```
