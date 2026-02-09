@@ -1,10 +1,10 @@
-# 🌐 Cara Install MetalLB & NGINX Ingress Controller
+# Proses Install MetalLB & NGINX Ingress Controller
 
 ### Panduan Lengkap instalasi MetalLB dan Ingress untuk akses aplikasi dari Luar Cluster!
 
 ---
 
-## 📋 Nice To Have Cnocepts
+## Nice To Have Cnocepts
 
 ### Penjelasan Sederhana
 
@@ -33,7 +33,7 @@ Bayangkan Anda sudah punya **aplikasi website** yang jalan di Kubernetes. Tapi m
 
 ---
 
-## 🎯 Apa yang Akan Anda Dapatkan?
+## Apa yang Akan di Dapatkan?
 
 Setelah mengikuti panduan ini:
 
@@ -45,7 +45,7 @@ Setelah mengikuti panduan ini:
 
 ---
 
-## ⏱️ Berapa Lama Prosesnya?
+## Berapa Lama Prosesnya?
 
 - **Waktu:** 20-30 menit
 - **Tingkat Kesulitan:** Mudah-Menengah
@@ -56,7 +56,7 @@ Setelah mengikuti panduan ini:
 
 ---
 
-## 📋 Persiapan: Cari IP Address yang Kosong
+## Persiapan: Cari IP Address yang Kosong
 
 **SANGAT PENTING!** Sebelum install MetalLB, kita harus cari IP address yang:
 - Masih kosong (tidak dipakai device lain)
@@ -105,7 +105,7 @@ From 192.168.2.104 icmp_seq=1 Destination Host Unreachable
 
 ---
 
-## 📋 Langkah-Langkah Instalasi
+## Langkah-Langkah Instalasi
 
 ### LANGKAH 1: Masuk ke Server Master
 
@@ -591,7 +591,7 @@ https://demo-local-https
 
 ---
 
-## 🎨 Cara Menambahkan Aplikasi Lain
+## Cara Menambahkan Aplikasi Lain
 
 Setelah setup ini, Anda bisa hosting banyak aplikasi dengan 1 IP address saja!
 
@@ -639,11 +639,11 @@ http://app2.local
 
 ---
 
-## 🔒 LANGKAH 6: Setup High Availability (HA) untuk Ingress Controller
+## LANGKAH 6: Setup High Availability (HA) untuk Ingress Controller
 
 **Kenapa perlu HA?**
 
-Bayangkan Ingress Controller kita hanya ada 1 pod di 1 worker node. Kalau:
+Jika Ingress Controller kita hanya ada 1 pod di 1 worker node. Kalau:
 - Worker node tersebut mati → Semua aplikasi tidak bisa diakses!
 - Pod Ingress crash → Downtime sampai pod baru jalan
 
@@ -824,7 +824,7 @@ demo-app    demo-ingress   nginx   demo.local   192.168.2.240   80, 443   10m
 
 ---
 
-## 😰 Troubleshooting - Kalau Ada Masalah
+## Troubleshooting - Kalau Ada Masalah
 
 ### Masalah 1: Pod Ketiga Stuck Pending Setelah Edit Deployment Ingress
 
@@ -1222,7 +1222,7 @@ kubectl delete pod -n ingress-nginx -l app.kubernetes.io/component=controller
 
 ---
 
-## 🔧 Perintah Penting untuk Dicatat
+## Perintah Penting untuk Dicatat
 
 ```bash
 # Cek pods MetalLB
@@ -1259,7 +1259,7 @@ kubectl rollout restart daemonset speaker -n metallb-system
 
 ---
 
-## 📚 Konsep Penting yang Perlu Dipahami
+## Konsep Penting yang Perlu Dipahami
 
 ### 1. Perbedaan Service Type
 
@@ -1306,9 +1306,9 @@ Satu IP, banyak aplikasi, dipisah berdasarkan domain!
 
 ---
 
-## 🎓 Kesimpulan
+## Kesimpulan
 
-**Apa yang sudah Anda capai:**
+**Apa yang sudah tercapai:**
 
 ✅ MetalLB terinstall dan memberikan IP pool  
 ✅ NGINX Ingress Controller terinstall dengan EXTERNAL-IP  
