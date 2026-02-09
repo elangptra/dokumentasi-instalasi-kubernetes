@@ -49,9 +49,9 @@ Dokumen ini menjelaskan alur kerja deployment aplikasi (GitOps Workflow) ke dala
 > 3.  **[ArgoCD](instalasi-dan-penggunaan-argocd.md)** (CD Controller)
 > 4.  **[MetalLB](instalasi-ingress-metallb.md)** (Load Balancer Controller)
 > 5.  **[Ingress NGINX](instalasi-ingress-metallb.md)** (Ingress Controller)
-> 6.  **External Secret Operator** (Secret Management)
+> 6.  **[External Secret Operator](instalasi-externa-secret-operator.md)** (Secret Management)
 > 7.  **[Images](https://dockerhub.com)** (Builded Image)
-> 8.  **Headlamp** *(Opsional - UI Dashboard)*
+> 8.  **[Headlamp](instalasi-headlamp-dashboard.md)** *(Opsional - UI Dashboard)*
 > 9.  **[Grafana](Instalasi-grafana-prometheus-loki.md)** *(Opsional - Monitoring)*
 
 
