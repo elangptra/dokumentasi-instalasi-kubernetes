@@ -1494,4 +1494,13 @@ HPA memantau CPU usage:
 
 ## Referensi
 
+>[Kubernetes Tasks - Pull an Image from a Private Registry](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/)
+>
+>[Kubernetes Concepts - TLS Secrets](https://kubernetes.io/docs/concepts/configuration/secret/#tls-secrets)
+>
+>[Kubernetes Tasks - Adding entries to Pod /etc/hosts with HostAliases](https://kubernetes.io/docs/tasks/network/customize-hosts-file-for-pods/)
+>
+>[Kubernetes Tasks - Configure Liveness, Readiness and Startup Probes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
+>
+>[Kubernetes Tasks - Horizontal Pod Autoscaling](https://kubernetes.io/docs/concepts/workloads/autoscaling/horizontal-pod-autoscale/)
 

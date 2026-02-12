@@ -39,6 +39,7 @@ Dokumen ini menjelaskan alur kerja deployment aplikasi (GitOps Workflow) ke dala
       - [Buka Menu Pembuatan](#buka-menu-pembuatan)
       - [Eksekusi](#eksekusi)
       - [Status Indikator](#status-indikator)
+  - [Referensi](#referensi)
 
 
 ## 1. PRASYARAT (MANDATORY)
@@ -650,3 +651,25 @@ Perhatikan ikon status pada kartu aplikasi:
     ✅ Synced (Hijau): Konfigurasi di cluster sudah 100% sama dengan di Git.
 
     💔 Degraded (Merah): Ada error pada konfigurasi (misal: Image tidak ditemukan atau Secret salah).
+
+## Referensi
+
+>[GitLab - Personal Access Tokens](https://docs.gitlab.com/user/profile/personal_access_tokens/)
+>
+>[GitLab - CI/CD Variables](https://docs.gitlab.com/ci/variables/)
+>
+>[K8s Tasks - Adding entries to Pod /etc/hosts](https://kubernetes.io/docs/tasks/network/customize-hosts-file-for-pods/)
+>
+>[K8s Tasks - Configure Liveness/Readiness Probes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
+>
+>[K8s Tasks - Pull Image from Private Registry](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/)
+>
+>[External Secrets - Advanced Templating](https://external-secrets.io/latest/guides/templating/)
+>
+>[NGINX Ingress - Backend Protocol](https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/annotations/#backend-protocol)
+>
+>[NGINX Ingress - Proxy SSL](https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/annotations/#proxy-ssl)
+>
+>[ArgoCD - Connecting to Private Repos](https://argo-cd.readthedocs.io/en/stable/user-guide/private-repositories/#connecting-via-https)
+>
+>[ArgoCD - Auto Sync](https://argo-cd.readthedocs.io/en/stable/user-guide/auto_sync/)
