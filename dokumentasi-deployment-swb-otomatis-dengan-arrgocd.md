@@ -47,7 +47,7 @@ Dokumen ini menjelaskan alur kerja deployment aplikasi (GitOps Workflow) ke dala
 
 > 1.  **[Cluster Kubernetes](1.%20Instalasi-kubernetes-3-node-cluster.md)** (Running & Healthy)
 > 2.  **[Akun GitLab](https://gitlab.com)** (Untuk Repository & Registry)
-> 3.  **[ArgoCD](5.%20instalasi-dan-penggunaan-argocd.md)** (CD Controller)
+> 3.  **[ArgoCD](5.%20instalasi-dan-penggunaan-argocd-dan-eso.md)** (CD Controller)
 > 4.  **[MetalLB](2.%20instalasi-ingress-metallb.md)** (Load Balancer Controller)
 > 5.  **[Ingress NGINX](2.%20instalasi-ingress-metallb.md)** (Ingress Controller)
 > 6.  **[External Secret Operator](3.%20instalasi-external-secret-operator.md)** (Secret Management)
