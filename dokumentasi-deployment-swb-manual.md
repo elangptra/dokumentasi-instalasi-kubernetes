@@ -375,7 +375,7 @@ namespace/swb-wahana created
 File ini berisi credential untuk pull image dari Docker Hub (atau registry lain yang digunakan).
 
 ```bash
-nano config/regcred-swb.yaml
+vim config/regcred-swb.yaml
 ```
 
 Isi dengan:
@@ -439,7 +439,7 @@ base64 -w 0 /path/to/tls.key > tls-key-base64.txt
 **2. Buat file secret:**
 
 ```bash
-nano config/swb-ssl-secret.yaml
+vim config/swb-ssl-secret.yaml
 ```
 
 Isi dengan:
@@ -489,7 +489,7 @@ secret/swb-ssl created
 File ini untuk auto-scaling backend pods berdasarkan CPU usage.
 
 ```bash
-nano config/swb-hpa.yaml
+vim config/swb-hpa.yaml
 ```
 
 Isi dengan:
@@ -522,7 +522,7 @@ spec:
 #### Langkah 8.4: Buat Backend Deployment
 
 ```bash
-nano app/swb-deployment.yaml
+vim app/swb-deployment.yaml
 ```
 
 Isi dengan:
@@ -593,7 +593,7 @@ spec:
 #### Langkah 8.5: Buat Backend Service
 
 ```bash
-nano app/swb-service.yaml
+vim app/swb-service.yaml
 ```
 
 Isi dengan:
@@ -623,7 +623,7 @@ spec:
 #### Langkah 8.6: Buat NGINX ConfigMap
 
 ```bash
-nano nginx/nginx-config.yaml
+vim nginx/nginx-config.yaml
 ```
 
 Isi dengan:
@@ -687,7 +687,7 @@ data:
 #### Langkah 8.7: Buat NGINX Deployment
 
 ```bash
-nano nginx/nginx-deployment.yaml
+vim nginx/nginx-deployment.yaml
 ```
 
 Isi dengan:
@@ -748,7 +748,7 @@ spec:
 #### Langkah 8.8: Buat NGINX Service
 
 ```bash
-nano nginx/nginx-service.yaml
+vim nginx/nginx-service.yaml
 ```
 
 Isi dengan:
@@ -779,7 +779,7 @@ spec:
 #### Langkah 8.9: Buat Ingress
 
 ```bash
-nano ingress/ingress-config.yaml
+vim ingress/ingress-config.yaml
 ```
 
 Isi dengan:
@@ -1010,7 +1010,7 @@ Catat IP di kolom `ADDRESS`, misal: `192.168.2.240`
 **Di Laptop/Komputer Linux/Mac:**
 
 ```bash
-sudo nano /etc/hosts
+sudo vim /etc/hosts
 ```
 
 Tambahkan:
